@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+#Run Sample: ./ansible/scripts/bootstrap-node pi.yml
+
+# Env
+#docker pull ${ANSIBLE_IMAGE}
+DOCKER_ANSIBLE_RUN="docker-compose -f docker-compose.yml --log-level ERROR run --rm ansible_cli"
+PROCESS_NAME=${1}
+
+echo "Process name: ${PROCESS_NAME}"
+
+cd ../.. | ${DOCKER_ANSIBLE_RUN} ansible-playbook /tmp/plays/${PROCESS_NAME}
+

@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+  ansible_cli:
+    image: ${ANSIBLE_IMAGE}
+    build:
+      context: ./ansible
+      args:
+        - ANSIBLE_VERSION=${ANSIBLE_VERSION}
+        - DOCKER_PY_VERSION=${DOCKER_PY_VERSION}
+    container_name: ansible_cli
+    volumes:
+      - ${ANSIBLE_HOME_PATH}/:/tmp
+      - ~/.ssh/:/home/ssh-key
+
+  registry:
+    container_name: registry
+    restart: always
+    image: registry:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - /var/lib/docker/volumes/registry:/var/lib/registry
+      - ./registry/config.yml:/etc/docker/registry/config.yml

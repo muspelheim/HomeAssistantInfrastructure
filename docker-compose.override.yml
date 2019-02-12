@@ -1,0 +1,17 @@
+version: "3.3"
+services:
+  ansible_cli:
+    environment:
+      # ansible vars
+      - ANSIBLE_IMAGE=${ANSIBLE_IMAGE}
+      - ANSIBLE_VERSION=${ANSIBLE_VERSION}
+      - ANSIBLE_HOME_PATH=${ANSIBLE_HOME_PATH}
+      
+#      #UIDs
+#      - GID=${HA_GID}
+#      - UID=${HA_UID}
+
+      # Prepare config environment
+      - DOCKER_PY_VERSION=${DOCKER_PY_VERSION}
+      - SWARM_MASTER=${SWARM_MASTER}
+      - RPI_NODES=${RPI_NODES}

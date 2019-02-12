@@ -1,0 +1,6 @@
+- name: setup the system requirements on all nodes
+  hosts: all
+  serial: 20
+  become: true
+  roles:
+    - pi

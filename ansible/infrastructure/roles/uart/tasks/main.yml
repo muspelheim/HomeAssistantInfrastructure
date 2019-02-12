@@ -1,0 +1,13 @@
+---
+- set_fact:
+    real_ansible_host: "{{ ansible_host }}"
+
+- name: 'Place boot config to /boot/config.txt'
+  template:
+    src: boot-config.conf.j2
+    dest: "/boot/config.txt"
+
+- name: 'Place RPI cmdline to /boot/cmdline.txt'
+  template:
+    src: cmdline.txt,j2
+    dest: "/boot/cmdline.txt"

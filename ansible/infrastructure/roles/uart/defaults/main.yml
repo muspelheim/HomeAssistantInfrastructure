@@ -1,0 +1,2 @@
+---
+enable_uart: "{{ lookup('env','RPI_ENABLE_UART') }}"

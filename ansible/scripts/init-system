@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+
+# ENV
+DOCKER_ANSIBLE_RUN="docker-compose -f docker-compose.override.yml -f docker-compose.yml --log-level ERROR run ansible_cli"
+DOCKER_ANSIBLE_BUILD="docker-compose -f docker-compose.override.yml -f docker-compose.yml --log-level ERROR build ansible_cli"
+export HA_UID=$(id -u)
+export HA_GID=$(id -g)
+export ANSIBLE_IMAGE=ansible_cli:hosts
+
+# Check if container is exist and remove
+set +e
+docker rm $(docker ps -a | grep ansible | awk '{print $1}') &> /dev/null
+set -e
+
+# Build & push image ansible_cli
+cd ../.. | ${DOCKER_ANSIBLE_BUILD}
+function commit_docker {
+   ANSIBLE_CLI_CONTAINER_ID=$(docker ps -a | grep ansible | awk '{print $1}')
+   docker commit ${ANSIBLE_CLI_CONTAINER_ID} ${ANSIBLE_IMAGE}
+   docker push ${ANSIBLE_IMAGE}
+   docker rm ${ANSIBLE_CLI_CONTAINER_ID}
+}
+
+# Create hosts.yaml
+cd ../.. | ${DOCKER_ANSIBLE_RUN} ansible-playbook plays/prepare-hosts.yml
+commit_docker

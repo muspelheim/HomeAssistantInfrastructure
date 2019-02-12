@@ -1,0 +1,3 @@
+---
+- name: Generate hosts.yaml
+  template: src=hosts.yaml.j2 dest=/home/hosts.yaml mode=0644

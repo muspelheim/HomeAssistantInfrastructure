@@ -1,0 +1,29 @@
+
+var database = 'vm_metrics'
+var rp = 'autogen'
+var measurement = 'mem_vm'
+var field = 'used_percent'
+var groupBy = 'host'
+var period = 1m
+var every = 1m
+var critical = 60
+
+var data = stream
+    |from()
+        .database(database)
+        .retentionPolicy(rp)
+        .measurement(measurement)
+        .groupBy(groupBy)
+    |window()
+        .period(period)
+        .every(every)
+    |mean(field)
+        .as('value')
+
+var trigger = data
+    |alert()
+        .crit(lambda: "value" > critical)
+        .message('Memory usage of {{ index .Tags "host" }} : {{ index .Fields "value"}} ')
+
+trigger
+    .slack()

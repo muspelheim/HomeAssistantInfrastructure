@@ -1,0 +1,3 @@
+---
+swarm_master_arr: "{{ lookup('env','SWARM_MASTER') }}"
+rpi_node_arr: "{{ lookup('env','RPI_NODES') }}"

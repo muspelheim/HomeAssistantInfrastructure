@@ -1,0 +1,20 @@
+---
+- set_fact:
+    real_ansible_host: "{{ ansible_host }}"
+
+- name: 'Update APT package cache'
+  action: apt update_cache=yes
+
+- name: 'Upgrade APT to the lastest packages'
+  action: apt upgrade=safe
+
+- name: 'Install a list of packages'
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - git
+    - screen
+    - strace
+    - mc
+    - nano

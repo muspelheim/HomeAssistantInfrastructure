@@ -1,0 +1,16 @@
+---
+# HomeAssistant ansible inventory file
+all:
+  children:
+    master:
+      hosts:
+{% set masters = swarm_master_arr.split(',') %}
+{% for master in masters %}
+        {{ master }}{{ ':' }}
+{% endfor %}
+    rpi:
+      hosts:
+{% set rpis = rpi_node_arr.split(',') %}
+{% for rpi in rpis %}
+        {{ rpi }}{{ ':' }}
+{% endfor %} 

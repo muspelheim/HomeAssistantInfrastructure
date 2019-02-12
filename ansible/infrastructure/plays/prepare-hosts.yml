@@ -1,0 +1,6 @@
+---
+- name: generated hosts file
+  hosts: localhost
+  gather_facts: no
+  roles:
+    - generator
