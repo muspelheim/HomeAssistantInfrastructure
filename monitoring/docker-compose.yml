@@ -1,12 +1,20 @@
-version: "3.3"
+version: "3.4"
 
 services:
   telegraf:
-    image: telegraf:1.3
+    image: telegraf
     networks:
       - tick-net
+    environment:
+      - ENGINE_HOST={{.Node.Hostname}}
+      - HOST_PROC=/rootfs/proc
+      - HOST_SYS=/rootfs/sys
+      - HOST_ETC=/rootfs/etc
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
     configs:
       - source: telegraf-config
         target: /etc/telegraf/telegraf.conf
@@ -27,7 +35,6 @@ services:
           - node.role == worker
 
   grafana:
-    restart: unless-stopped
     image: grafana/grafana
     volumes:
       - grafana:/var/lib/grafana

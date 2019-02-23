@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [ -f "${PROJECT_DIR}/.env" ]; then
+    export $(grep -v '^#' ${PROJECT_DIR}/.env | xargs)
+fi
+
+if [ -f "${PWD}/.env" ]; then
+    export $(grep -v '^#' ${PWD}/.env | xargs)
+fi

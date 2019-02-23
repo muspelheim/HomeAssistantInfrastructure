@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.4'
 
 services:
   agent:
@@ -24,6 +24,7 @@ services:
       - portainer_data:/data
     networks:
       - agent_network
+      - traefik
     deploy:
       mode: replicated
       replicas: 1
@@ -32,17 +33,20 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.domain=${MAIN_DOMAIN}"
+        - "traefik.docker.network=traefik"
         - "traefik.frontend.rule=Host:portainer.${MAIN_DOMAIN}"
         - "traefik.port=9000"
         - "traefik.backend=portainer"
-        - "traefik.frontend.entryPoints=http"
-        - "traefik.frontend.auth.basic=true"
-        - "traefik.frontend.auth.basic=${AUTH_PORTAINER_USER}:${AUTH_CHRONOGRAF_PASSWORD}"
+        - "traefik.entrypoints=https"
+        - "traefik.frontend.passHostHeader=true"
 
 networks:
   agent_network:
     driver: overlay
     attachable: true
+  traefik:
+    driver: overlay
+    external: true
 
 volumes:
   portainer_data:
