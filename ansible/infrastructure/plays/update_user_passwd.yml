@@ -1,0 +1,26 @@
+---
+- name: Update user's password on all nodes
+  hosts: all
+  serial: 20
+  become: true
+  become_user: pi
+  gather_facts: no
+  vars:
+    - ansible_user: "{{ lookup('env','MAIN_USER_NAME') }}"
+    - ansible_password: "{{ lookup('env','MAIN_USER_PASSWORD') }}"
+    - passwd_sha: "{{ lookup('env','MAIN_USER_PASSWORD_SHA512') }}"
+  tasks:
+    - name: Update user's Password
+      user:
+        name: pi
+        update_password: always
+        password: "{{ passwd_sha }}"
+      ignore_errors: True
+
+    - name: Check Password
+      shell: "cat /etc/shadow | grep {{ ansible_user }} | awk -F: '{print $2}'"
+      register: passwd_sha512
+
+    - debug: msg="Password has been changed"
+      when:
+        - passwd_sha512.stdout == passwd_sha

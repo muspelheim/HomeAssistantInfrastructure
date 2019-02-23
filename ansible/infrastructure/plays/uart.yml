@@ -1,3 +1,4 @@
+---
 - name: Enable the UART on all nodes
   hosts: all
   serial: 20

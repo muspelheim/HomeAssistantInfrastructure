@@ -1,0 +1,18 @@
+---
+- set_fact:
+    real_ansible_host: "{{ ansible_host }}"
+
+- name: 'Creates .bashrc.d directory'
+  file:
+    path: "{{ ansible_env.HOME }}/.bashrc.d"
+    state: directory
+
+- name: 'Place bashrc {{ ansible_env.HOME }}/.bashrc'
+  template:
+    src: ".bashrc.j2"
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+
+- name: 'Place GIT branch helper to {{ ansible_env.HOME }}/.bashrc.d/gitbranch.sh'
+  template:
+    src: "bashrc.d/gitbranch.sh.j2"
+    dest: "{{ ansible_env.HOME }}/.bashrc.d/gitbranch.sh"

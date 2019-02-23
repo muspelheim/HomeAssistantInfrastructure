@@ -1,0 +1,8 @@
+---
+- name: clean docker images
+  shell: docker image prune --filter "until=24h" -f
+  register: cl_docker_img
+
+- debug:
+    msg: "{{ cl_docker_img.stdout }}"
+

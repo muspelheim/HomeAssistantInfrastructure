@@ -1,0 +1,8 @@
+---
+- name: setup bashrc helpers to all nodes
+  hosts: all
+  serial: 20
+  become: true
+  become_user: pi
+  roles:
+    - bashrc

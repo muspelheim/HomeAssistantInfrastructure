@@ -1,5 +1,7 @@
 export PROJECT_DIR:=$(PWD)
 
+args = `arg="$(filter-out $(firstword $(MAKECMDGOALS)),$(MAKECMDGOALS))" && echo $${arg:-${1}}`
+
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -37,3 +39,11 @@ remove-portainer:
 init-networks:
 	docker network create --driver overlay --subnet=10.0.9.0/24 traefik-public \
 	&& docker network create --driver overlay --subnet=10.0.8.0/24 traefik
+
+.PHONY: ansible-run ## Run Ansible role (example: ansible-run pi.yml)
+ansible-run:
+	./ansible/scripts/bootstrap-node $(call args)
+
+.PHONY: ansible-build ## Build Ansible image
+ansible-build:
+	./ansible/scripts/init-system
