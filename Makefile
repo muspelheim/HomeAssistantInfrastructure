@@ -32,3 +32,8 @@ remove-traefik:
 .PHONY: remove-portainer ## Deploy portainer stack to docker swarm
 remove-portainer:
 	docker stack rm portainer
+
+.PHONY: init-networks ## Init overlay docker networks
+init-networks:
+	docker network create --driver overlay --subnet=10.0.9.0/24 traefik-public \
+	&& docker network create --driver overlay --subnet=10.0.8.0/24 traefik
