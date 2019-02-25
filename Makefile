@@ -48,7 +48,7 @@ ansible-run:
 ansible-build:
 	./ansible/scripts/init-system
 
-.PHONY: mqtt-setup ## Build Ansible image
+.PHONY: mqtt-setup ## Build-Setup MQTT Brocker image
 mqtt-setup:
 	cd mqtt && . ../bin/pidarota && ../bin/passwd-gen ${PROJECT_DIR}/mqtt/config/.passwd \
 	&& docker stack rm mqtt \

@@ -5,14 +5,17 @@ services:
     image: ${MQTT_IMAGE}
     build:
       context: ./
-    networks:
-      - traefik
+    ports:
+      - "1883:1883"
+      - "9001:9001"
     volumes:
       - mosquitto-data:/mosquitto/data
     configs:
       - source: mosquitto-config
         target: /mosquitto/config/mosquitto.conf
     deploy:
+      mode: replicated
+      replicas: 1
       restart_policy:
         condition: on-failure
       placement:
@@ -25,7 +28,6 @@ services:
         - "traefik.backend=mosquitto"
         - "traefik.port=9001"
         - "traefik.frontend.rule=Host:mqtt.${MAIN_DOMAIN}"
-        - "traefik.entrypoints=https"
         - "traefik.frontend.passHostHeader=true"
 
 configs:
@@ -34,8 +36,3 @@ configs:
 
 volumes:
     mosquitto-data: {}
-
-networks:
-  traefik:
-    driver: overlay
-    external: true
