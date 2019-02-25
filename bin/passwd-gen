@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+DEST_PATH=${1}
+
+echo ${MQTT_USER}:${MQTT_PASSWORD} > ${DEST_PATH}

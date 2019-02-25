@@ -47,3 +47,10 @@ ansible-run:
 .PHONY: ansible-build ## Build Ansible image
 ansible-build:
 	./ansible/scripts/init-system
+
+.PHONY: mqtt-setup ## Build Ansible image
+mqtt-setup:
+	cd mqtt && . ../bin/pidarota && ../bin/passwd-gen ${PROJECT_DIR}/mqtt/config/.passwd \
+	&& docker stack rm mqtt \
+	&& docker-compose build && docker-compose push \
+	&& docker stack deploy -c docker-compose.yml mqtt

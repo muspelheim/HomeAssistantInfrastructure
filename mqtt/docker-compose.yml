@@ -1,0 +1,41 @@
+version: "3.4"
+
+services:
+  mosquitto:
+    image: ${MQTT_IMAGE}
+    build:
+      context: ./
+    networks:
+      - traefik
+    volumes:
+      - mosquitto-data:/mosquitto/data
+    configs:
+      - source: mosquitto-config
+        target: /mosquitto/config/mosquitto.conf
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == worker
+      labels:
+        - "traefik.enable=true"
+        - "traefik.domain=${MAIN_DOMAIN}"
+        - "traefik.docker.network=traefik"
+        - "traefik.backend=mosquitto"
+        - "traefik.port=9001"
+        - "traefik.frontend.rule=Host:mqtt.${MAIN_DOMAIN}"
+        - "traefik.entrypoints=https"
+        - "traefik.frontend.passHostHeader=true"
+
+configs:
+  mosquitto-config:
+    file: $PWD/config/mosquitto.conf
+
+volumes:
+    mosquitto-data: {}
+
+networks:
+  traefik:
+    driver: overlay
+    external: true

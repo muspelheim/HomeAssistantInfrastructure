@@ -1,7 +1,5 @@
 .env
-ansible/infrastructure/hosts.yaml
-traefik/config/.htpasswd
 traefik/config/acme.json
 traefik/config/traefik.toml
 traefik/config/rules.toml
-traefik/.env
+mqtt/config/.passwd

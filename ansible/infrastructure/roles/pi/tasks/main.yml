@@ -2,11 +2,11 @@
 - set_fact:
     real_ansible_host: "{{ ansible_host }}"
 
-- name: 'Update APT package cache'
-  action: apt update_cache=yes
-
-- name: 'Upgrade APT to the lastest packages'
-  action: apt upgrade=safe
+#- name: 'Update APT package cache'
+#  action: apt update_cache=yes
+#
+#- name: 'Upgrade APT to the lastest packages'
+#  action: apt upgrade=safe
 
 - name: 'Install a list of packages'
   apt:
@@ -18,3 +18,6 @@
     - strace
     - mc
     - nano
+    - yamllint
+    - apache2-utils
+    - whois
