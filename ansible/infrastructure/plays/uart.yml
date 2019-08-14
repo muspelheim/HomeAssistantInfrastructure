@@ -4,4 +4,4 @@
   serial: 20
   become: true
   roles:
-    - uart
+    - security

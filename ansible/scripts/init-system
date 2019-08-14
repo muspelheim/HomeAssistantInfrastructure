@@ -4,8 +4,10 @@ set -e
 # ENV
 DOCKER_ANSIBLE_RUN="docker-compose -f docker-compose.override.yml -f docker-compose.yml --log-level ERROR run ansible_cli"
 DOCKER_ANSIBLE_BUILD="docker-compose -f docker-compose.override.yml -f docker-compose.yml --log-level ERROR build ansible_cli"
+
 export HA_UID=$(id -u)
 export HA_GID=$(id -g)
+
 export ANSIBLE_IMAGE=127.0.0.1:5000/ansible_cli:hosts
 
 # Check if container is exist and remove

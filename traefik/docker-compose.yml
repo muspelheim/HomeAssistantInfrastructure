@@ -2,7 +2,21 @@ version: "3.4"
 
 services:
   reverse-proxy:
-    image: traefik:v1.7.8
+    container_name: ${TRAEFIK_CONTAINER_NAME}
+    build:
+      context: ./traefik
+      args:
+        MAIN_DOMAIN: ${MAIN_DOMAIN}
+        TRAEFIK_MAIN_DOMAIN: ${TRAEFIK_MAIN_DOMAIN}
+        TRAEFIK_DEBUG: ${TRAEFIK_DEBUG}
+        TRAEFIK_DASHBOARD: ${TRAEFIK_DASHBOARD}
+        TRAEFIK_ACME_EMAIL: ${TRAEFIK_ACME_EMAIL}
+        RPI_NODE_1: ${RPI_NODE_1}
+        RPI_NODE_2: ${RPI_NODE_2}
+        RPI_NODE_3: ${RPI_NODE_3}
+        AUTH_ESPHOME_USER: ${AUTH_ESPHOME_USER}
+        AUTH_ESPHOME_PASSWORD: ${AUTH_ESPHOME_PASSWORD}
+    image: ${TRAEFIK_IMAGE}
     ports:
       - 80:80
       - 443:443
@@ -12,12 +26,18 @@ services:
       - traefik
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./config/acme.json:/acme.json
-    configs:
-      - source: traefik-config
-        target: /etc/traefik/traefik.toml
-      - source: traefik-rules
-        target: /etc/traefik/rules.toml
+      - ./traefik/config/acme.json:/acme.json
+    environment:
+      - MAIN_DOMAIN=${MAIN_DOMAIN}
+      - TRAEFIK_MAIN_DOMAIN=${TRAEFIK_MAIN_DOMAIN}
+      - TRAEFIK_DEBUG=${TRAEFIK_DEBUG}
+      - TRAEFIK_DASHBOARD=${TRAEFIK_DASHBOARD}
+      - TRAEFIK_ACME_EMAIL=${TRAEFIK_ACME_EMAIL}
+      - RPI_NODE_1=${RPI_NODE_1}
+      - RPI_NODE_2=${RPI_NODE_2}
+      - RPI_NODE_3=${RPI_NODE_3}
+      - AUTH_ESPHOME_USER=${AUTH_ESPHOME_USER}
+      - AUTH_ESPHOME_PASSWORD=${AUTH_ESPHOME_PASSWORD}
     deploy:
       placement:
         constraints:
@@ -33,15 +53,31 @@ services:
         - "traefik.entrypoints=https"
         - "traefik.frontend.passHostHeader=true"
 
+  robots-disallow:
+    build:
+      context: ./robots
+    image: ${ROBOTS_DISALLOW_IMAGE}
+    networks:
+      - traefik
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == worker
+      labels:
+        - "traefik.enable=true"
+        - "traefik.domain=${MAIN_DOMAIN}"
+        - "traefik.docker.network=traefik"
+        - "traefik.backend=robots-disallow"
+        - "traefik.port=8080"
+        - "traefik.frontend.rule=HostRegexp:{subdomain:[a-z]+}.${MAIN_DOMAIN};Path:/robots.txt"
+        - "traefik.entrypoints=https,http"
+        - "traefik.frontend.passHostHeader=true"
+
 networks:
   traefik-net:
     driver: overlay
   traefik:
     driver: overlay
     external: true
-
-configs:
-  traefik-config:
-    file: ./config/traefik.toml
-  traefik-rules:
-    file: ./config/rules.toml

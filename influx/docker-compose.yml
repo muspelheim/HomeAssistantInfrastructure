@@ -1,0 +1,19 @@
+version: "3.4"
+
+services:
+  influxdb:
+    image: influxdb:1.5
+    volumes:
+      - /mnt/influxdb:/var/lib/influxdb
+    ports:
+      - 8087:8086
+    environment:
+      - INFLUXDB_DB=${HASS_INFLUXDB_DB}
+      - INFLUXDB_ADMIN_USER=${HASS_INFLUXDB_ADMIN_USER}
+      - INFLUXDB_ADMIN_PASSWORD=${HASS_INFLUXDB_ADMIN_PASSWORD}
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == worker

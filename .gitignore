@@ -1,5 +1,6 @@
+.idea
 .env
-traefik/config/acme.json
+traefik/traefik/config/acme.json
 traefik/config/traefik.toml
 traefik/config/rules.toml
 mqtt/config/.passwd

@@ -1,0 +1,36 @@
+[backends]
+  [backends.backend-homeassistant]
+    [backends.backend-homeassistant.servers]
+      [backends.backend-homeassistant.servers.server-homeassistant-ext]
+      url = "http://{{.Env.RPI_NODE_2}}:8123"
+      weight = 2
+
+  [backends.backend-esphome]
+    [backends.backend-esphome.servers]
+      [backends.backend-esphome.servers.server-esphome-ext]
+      url = "http://{{.Env.RPI_NODE_3}}:6052"
+      weight = 2
+
+[frontends]
+  [frontends.frontend-homeassistant]
+  backend = "backend-homeassistant"
+  passHostHeader = true
+  InsecureSkipVerify = true
+  [frontends.frontend-homeassistant.routes]
+    [frontends.frontend-homeassistant.routes.route-homeassistant-ext]
+    rule = "Host:ha.{{.Env.TRAEFIK_MAIN_DOMAIN}}"
+
+
+  [frontends.frontend-esphome]
+  backend = "backend-esphome"
+  passHostHeader = true
+  InsecureSkipVerify = true
+  [frontends.frontend-esphome.routes]
+    [frontends.frontend-esphome.routes.route-esphome-ext]
+    rule = "Host:esp.{{.Env.TRAEFIK_MAIN_DOMAIN}}"
+
+    [frontends.frontend-esphome.auth]
+      [frontends.frontend-esphome.auth.basic]
+        users = [
+          "{{.Env.AUTH_ESPHOME_USER}}:{{.Env.AUTH_ESPHOME_PASSWORD}}",
+        ]

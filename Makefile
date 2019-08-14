@@ -23,24 +23,32 @@ deploy-traefik:
 deploy-portainer:
 	. ./bin/pidarota && docker stack deploy -c portainer-agent-stack.yml portainer
 
-.PHONY: remove-monitoring ## Deploy monitoring stack to docker swarm
+.PHONY: deploy-influx ## Deploy influx stack to docker swarm
+deploy-influx:
+	cd influx && . ../bin/pidarota && docker stack deploy -c docker-compose.yml influx
+
+.PHONY: remove-monitoring ## Remove monitoring stack to docker swarm
 remove-monitoring:
 	docker stack rm monitoring
 
-.PHONY: remove-traefik ## Deploy traefik stack to docker swarm
+.PHONY: remove-traefik ## Remove traefik stack to docker swarm
 remove-traefik:
 	docker stack rm traefik
 
-.PHONY: remove-portainer ## Deploy portainer stack to docker swarm
+.PHONY: remove-portainer ## Remove portainer stack to docker swarm
 remove-portainer:
 	docker stack rm portainer
+
+.PHONY: remove-influx ## Remove stack to docker swarm
+remove-influx:
+	docker stack rm influx
 
 .PHONY: init-networks ## Init overlay docker networks
 init-networks:
 	docker network create --driver overlay --subnet=10.0.9.0/24 traefik-public \
 	&& docker network create --driver overlay --subnet=10.0.8.0/24 traefik
 
-.PHONY: ansible-run ## Run Ansible role (example: ansible-run pi.yml)
+.PHONY: ansible-run ## Run Ansible role (example: make ansible-run pi.yml)
 ansible-run:
 	./ansible/scripts/bootstrap-node $(call args)
 
@@ -54,3 +62,10 @@ mqtt-setup:
 	&& docker stack rm mqtt \
 	&& docker-compose build && docker-compose push \
 	&& docker stack deploy -c docker-compose.yml mqtt
+
+.PHONY: traefik-setup ## Build-Setup traefik image
+traefik-setup:
+	cd traefik && . ../bin/pidarota \
+	&& docker stack rm traefik \
+	&& docker-compose build && docker-compose push \
+	&& docker stack deploy -c docker-compose.yml traefik
