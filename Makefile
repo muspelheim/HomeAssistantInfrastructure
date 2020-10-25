@@ -50,7 +50,7 @@ init-networks:
 
 .PHONY: ansible-run ## Run Ansible role (example: make ansible-run pi.yml)
 ansible-run:
-	./ansible/scripts/bootstrap-node $(call args)
+	docker-compose pull ansible_cli && ./ansible/scripts/bootstrap-node $(call args)
 
 .PHONY: ansible-build ## Build Ansible image
 ansible-build:
