@@ -1,7 +1,7 @@
 .idea
-.env
-./traefik/traefik/config/acme.json
-traefik/config/traefik.toml
-traefik/config/rules.toml
-mqtt/config/.passwd
-traefik/traefik/config/acme.json
+legacy/.env
+legacy/traefik/traefik/config/acme.json
+legacy/traefik/config/traefik.toml
+legacy/traefik/config/rules.toml
+legacy/mqtt/config/.passwd
+legacy/traefik/traefik/config/acme.json
