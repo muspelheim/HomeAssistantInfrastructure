@@ -4,3 +4,4 @@
 traefik/config/traefik.toml
 traefik/config/rules.toml
 mqtt/config/.passwd
+traefik/traefik/config/acme.json
